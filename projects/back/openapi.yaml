@@ -1,0 +1,342 @@
+openapi: 3.0.0
+info:
+  title: SunCine API
+  description: |
+    Welcome to the **Suncine API Documentation**! 🎬
+
+    This API has been specifically designed for candidates applying for technical roles at **Sunne**. It serves as a test platform to evaluate your skills in working with RESTful APIs, handling authentication, and implementing movie-related features.
+
+    ### **Important Notice**
+    - This API is for **evaluation purposes only**.
+    - Candidates are encouraged to explore and interact with the API endpoints to demonstrate their technical proficiency.
+    - Any data processed or stored is purely for testing and is not linked to a production system.
+
+    ### **Key Features**
+    - **Authentication**: Securely log in and manage sessions with JWT tokens.
+    - **Movie Information**: Fetch detailed information about trending and popular movies, including metadata like titles, release dates, and descriptions.
+    - **User Interaction**: Enable actions such as liking or unliking movies, and retrieving user-specific preferences.
+    - **Favorites Management**: Access the list of movies liked by a user for personalized features.
+
+    ### **Target Audience**
+    This API is intended exclusively for **candidates** applying to Sunne who wish to showcase their ability to:
+    - Work with modern REST APIs.
+    - Handle authentication and secure data exchange.
+    - Build applications with dynamic, user-driven content.
+
+    ### **Authentication**
+    Most endpoints require an **Authorization** header with a valid JWT token:
+    ```http
+    Authorization: Bearer <your-token-here>
+    ```
+    Obtain the token via the `/login` endpoint by providing valid user credentials.
+
+    ### **Server Information**
+    - **Base URL**: `http://localhost:3000`
+    - For local development and testing during the evaluation.
+
+    We look forward to seeing how you leverage the Suncine API in your assessment! 🎥🍿
+  version: 1.0.0
+
+tags:
+  - name: Authentication
+    description: Endpoints related to user authentication, including login and token management.
+  - name: Movies
+    description: Endpoints for retrieving and interacting with movie data, such as trending movies and user preferences.
+  - name: User
+    description: Endpoints for accessing and managing user-related data.
+
+servers:
+  - url: http://localhost:3000
+    description: DEV
+
+paths:
+  ### AUTH ####
+  /login:
+    post:
+      summary: Login to the system
+      description: Authenticate a user and retrieve a JWT token along with user information.
+      tags:
+        - Authentication
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                login:
+                  type: string
+                  format: email
+                  example: admin@email.com
+                  description: The user's login email address.
+                password:
+                  type: string
+                  format: password
+                  example: Admin@123
+                  description: The user's password.
+      responses:
+        200:
+          description: Successful authentication
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: OK
+                    description: Status of the request.
+                  payload:
+                    type: object
+                    properties:
+                      token:
+                        type: string
+                        description: JWT token for authenticated requests.
+                        example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3Mzk0ZDE1YzdlODJkZWE1MjI4NjMzZCIsImxvZ2luIjoiYWRtaW5AZW1haWwuY29tIiwibmFtZSI6IkRldiIsImlhdCI6MTczMTg0OTY5NywiZXhwIjoxNzMyNDU0NDk3fQ.V05Z1XBEdEx-Jn0cGRttDWU5SHDXbPk2BhgYneKtmZ4
+                      user:
+                        $ref: '#/components/schemas/User'
+        401:
+          $ref: '#/components/responses/UnauthorizedError'
+        500:
+          $ref: '#/components/responses/InternalServerError'
+
+  ### MOVIE ####
+  /movie/most-trended:
+    get:
+      summary: Fetch the most trended movie details
+      description: Retrieves detailed information about the most-trended movie, including metadata, user interaction, and media assets.
+      tags:
+        - Movies
+      responses:
+        200:
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Movie'
+        401:
+          $ref: '#/components/responses/UnauthorizedError'
+        500:
+          $ref: '#/components/responses/InternalServerError'
+
+  /movie/top-10:
+    get:
+      summary: Get the top 10 trending movies
+      description: Retrieve a list of the top 10 trending movies, including details such as title, release date, popularity, and user preferences.
+      tags:
+        - Movies
+      security:
+        - bearerAuth: []
+      responses:
+        200:
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Movie'
+        401:
+          $ref: '#/components/responses/UnauthorizedError'
+        500:
+          $ref: '#/components/responses/InternalServerError'
+
+  /movie/like/{tmdb_id}:
+    put:
+      summary: Like or unlike a movie
+      description: Toggle the like status of a movie by its TMDB ID. Returns the current like status.
+      tags:
+        - Movies
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: tmdb_id
+          in: path
+          required: true
+          description: The TMDB ID of the movie to like or unlike.
+          schema:
+            type: integer
+            example: 558449
+      responses:
+        200:
+          description: Successful like/unlike toggle
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    enum:
+                      - LIKE
+                      - UNLIKE
+                    description: The new like status of the movie.
+                    example: LIKE
+        401:
+          $ref: '#/components/responses/UnauthorizedError'
+        500:
+          $ref: '#/components/responses/InternalServerError'
+
+  /movie/likes:
+    get:
+      summary: Get the list of liked movies
+      description: Retrieve a list of movies liked by the authenticated user, including details such as title, release date, and user preferences.
+      tags:
+        - Movies
+      security:
+        - bearerAuth: []
+      responses:
+        200:
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Movie'
+
+        401:
+          $ref: '#/components/responses/UnauthorizedError'
+        500:
+          $ref: '#/components/responses/InternalServerError'
+
+  ### USER ####
+  /user/me:
+    get:
+      summary: Get the authenticated user's details
+      description: Retrieve information about the currently authenticated user.
+      tags:
+        - User
+      security:
+        - bearerAuth: []
+      responses:
+        200:
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: OK
+                    description: Status of the request.
+                  payload:
+                    $ref: '#/components/schemas/User'
+        401:
+          $ref: '#/components/responses/UnauthorizedError'
+        500:
+          $ref: '#/components/responses/InternalServerError'
+
+### COMPONENTS ####
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  responses:
+    UnauthorizedError:
+      description: Unauthorized access
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: UNAUTHORIZED
+                description: Status indicating the user is unauthorized.
+    InternalServerError:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: ERROR
+              message:
+                type: string
+                example: An unexpected error occurred.
+  parameters:
+    AuthorizationHeader:
+      name: Authorization
+      in: header
+      required: true
+      description: JWT token for authentication.
+      schema:
+        type: string
+        example: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+  schemas:
+    Movie:
+      type: object
+      properties:
+        tmdb_id:
+          type: integer
+          description: The TMDB ID of the movie.
+          example: 558449
+        id:
+          type: string
+          description: Internal unique movie ID.
+          example: 6739f578aeafac0e04e2bf68
+        likes:
+          type: integer
+          description: Number of likes the movie has received.
+          example: 1
+        user_liked:
+          type: boolean
+          description: Whether the authenticated user liked this movie.
+          example: true
+        backdrop_path:
+          type: string
+          format: uri
+          description: URL to the movie's backdrop image.
+          example: https://image.tmdb.org/t/p/original/8mjYwWT50GkRrrRdyHzJorfEfcl.jpg
+        title:
+          type: string
+          description: Localized title of the movie.
+          example: Gladiador II
+        original_title:
+          type: string
+          description: Original title of the movie.
+          example: Gladiator II
+        poster_path:
+          type: string
+          format: uri
+          description: URL to the movie's poster image.
+          example: https://image.tmdb.org/t/p/w500/z1hNoGhH12ISnPzPqMOq1QLVGdu.jpg
+        release_date:
+          type: string
+          format: date
+          description: Release date of the movie.
+          example: 2024-11-13
+        overview:
+          type: string
+          description: Brief overview of the movie.
+          example: >
+            Anos depois de testemunhar a trágica morte do reverenciado herói Maximus
+            nas mãos de seu tio malvado, Lucius se vê forçado a lutar no Coliseu
+            depois que sua terra natal é conquistada por dois imperadores tirânicos,
+            que agora governam Roma. Com o coração ardendo de raiva e o destino do
+            Império pendurado por um fio, Lucius deve enfrentar perigos e inimigos,
+            redescobrindo em seu passado a força e a honra necessárias para trazer
+            a glória de Roma de volta ao seu povo. Prepare-se para uma jornada épica
+            de coragem e vingança na sangrenta arena do Coliseu.
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique user ID.
+          example: 67394d15c7e82dea5228633d
+        login:
+          type: string
+          description: User's login email.
+          example: admin@email.com
+        name:
+          type: string
+          description: User's full name.
+          example: Dev
+

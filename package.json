@@ -1,0 +1,43 @@
+{
+  "name": "sunne-test",
+  "version": "1.0.0",
+  "description": "",
+  "author": "Henrique Artur <contato@henriqueartur.com>",
+  "main": "index.js",
+  "engines": {
+    "node": "^20.0.0",
+    "pnpm": "^9.12.2",
+    "yarn": "please-use-pnpm",
+    "npm": "please-use-pnpm",
+    "deno": "please-use-pnpm",
+    "bun": "please-use-pnpm"
+  },
+  "packageManager": "pnpm@9.12.2",
+  "workspaces": [
+    "projects/back",
+    "projects/front"
+  ],
+  "scripts": {
+    "build": "pnpm run build:front",
+    "build:front": "pnpm run --filter=@sunne-test/front build",
+    "db:start": "docker compose up -d",
+    "dev": "pnpm run db:start & concurrently -n \"front,back\" --kill-others-on-fail \"pnpm run dev:front\" \"pnpm run dev:back\"",
+    "dev:back": "pnpm run --filter=@sunne-test/back dev:back",
+    "dev:front": "pnpm run --filter=@sunne-test/front dev:front",
+    "lint": "pnpm biome check --fix --unsafe --diagnostic-level=error ./projects/**",
+    "lint:ci": "pnpm biome ci --diagnostic-level=error",
+    "prepare": "husky",
+    "prepare:frnt:jr": "./scripts/prepare-readme.sh FRONT_JR \"FULL_PL.md BACK_PL.md BACK_SR.md node_modules .git\"",
+    "prepare:full:pl": "./scripts/prepare-readme.sh FULL_PL \"FRONT_JR.md BACK_PL.md BACK_SR.md node_modules .git\"",
+    "prepare:back:pl": "./scripts/prepare-readme.sh BACK_PL \"FRONT_JR.md FULL_PL.md BACK_SR.md node_modules .git projects/back/src/use-cases/movie projects/back/src/use-cases/user projects/back/src/domain/movie projects/back/src/infra/routers/movies.ts projects/back/src/infra/routers/user.ts projects/back/src/infra/tmdb projects/back/src/infra/db/models/movie.ts projects/back/src/infra/db/models/user-like.ts projects/back/src/infra/db/op/movies projects/back/src/infra/db/op/user/fetch-by-id.ts\"",
+    "prepare:back:sr": "./scripts/prepare-readme.sh BACK_SR \"FRONT_JR.md FULL_PL.md BACK_PL.md node_modules .git projects/back/src\"",
+    "test": "pnpm run --filter=@sunne-test/back test"
+  },
+  "devDependencies": {
+    "biome": "^0.3.3",
+    "husky": "^9.1.6"
+  },
+  "dependencies": {
+    "concurrently": "^9.1.0"
+  }
+}

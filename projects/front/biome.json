@@ -1,0 +1,16 @@
+{
+  "extends": [
+    "../../biome.json"
+  ],
+  "overrides": [
+    {
+      "linter": {
+        "rules": {
+          "style": {
+            "useNamingConvention": "off"
+          }
+        }
+      }
+    }
+  ]
+}
