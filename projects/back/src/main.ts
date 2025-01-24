@@ -1,11 +1,12 @@
 import { NestFactory } from '@nestjs/core';
 import { FastifyAdapter, NestFastifyApplication } from '@nestjs/platform-fastify';
-import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import mongoose from 'mongoose';
-import { RunSeed } from './infra/seed/';
 import { DB } from './infra/db';
+import swagger from "@fastify/swagger"
+import swaggerUi from "@fastify/swagger-ui"
 import { AppModule } from './app/app.module';
 import { EnvironmentConfigService } from './infra/enviroment-config/environment-config.service';
+import * as path from 'path';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(
@@ -20,17 +21,23 @@ async function bootstrap() {
   // Configure CORS
   app.enableCors({ origin: '*' });
 
+
   // Configure Swagger
-  const config = new DocumentBuilder()
-    .setTitle('SunCine API')
-    .setDescription('API documentation for SunCine')
-    .setVersion('1.0')
-    .build();
-  const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('/docs', app, document, {
-    swaggerOptions: {
+  app.register(swagger, {
+    mode: 'static',
+    specification: {
+      path: path.join(__dirname, '..','..', 'openapi.yaml'),  
+      baseDir: __dirname,
+    },
+  });
+  app.register(swaggerUi, {
+    routePrefix: '/docs',
+    uiConfig: {
       docExpansion: 'none',
       deepLinking: false,
+    },
+    theme: {
+      title: 'SunCine API Doc',
     },
   });
 
