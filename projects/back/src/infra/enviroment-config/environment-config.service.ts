@@ -1,21 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-// import { EnvironmentConfigInterface } from 'src/interfaces/enviroment-config.interface';
-
-// TMDB_TOKEN=
-// PEPPER=changeToStrongPepper
-// JWT_TOKEN=changeRoStrongJwtToken
-
-// MONGO_HOST=127.0.0.1
-// MONGO_PORT=27017
-// MONGO_DB_NAME=Suncine
-// MONGO_LOGIN=root
-// MONGO_PASS=troqueASenha
-
-// DEFAULT_USER_LOGIN=admin@email.com
-// DEFAULT_USER_PASS=Admin@123
-
-
 
 @Injectable()
 export class EnvironmentConfigService {
