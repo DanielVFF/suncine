@@ -15,7 +15,7 @@ export interface UserRawData extends Document {
   name: string
 }
 
-const USER_SCHEMA: Schema = new Schema({
+export const userSchema: Schema = new Schema({
   login: {
     type: String,
     required: true,
@@ -36,4 +36,4 @@ const USER_SCHEMA: Schema = new Schema({
   }
 })
 
-export const USER_MODEL = model<UserRawData>("User", USER_SCHEMA)
+export const USER_MODEL = model<UserRawData>("User", userSchema)

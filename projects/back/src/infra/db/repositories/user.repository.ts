@@ -11,14 +11,21 @@ export class UserRepository {
 
   async create(user: Partial<UserRawDataMongoose>): Promise<UserRawDataMongoose> {
     const newUser = new this.userModel(user);
-    return newUser.save();
+    return await newUser.save();
   }
 
+  async findOneByLogin(login : string){
+    return await this.userModel.findOne({
+      login
+    })
+  }
+
+
   async findAll(): Promise<UserRawDataMongoose[]> {
-    return this.userModel.find().exec();
+    return await this.userModel.find().exec();
   }
 
   async findById(id: string): Promise<UserRawDataMongoose | null> {
-    return this.userModel.findById(id).exec();
+    return await this.userModel.findById(id).exec();
   }
 }
