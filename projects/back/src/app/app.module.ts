@@ -2,12 +2,29 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { EnvironmentConfigModule } from 'src/infra/enviroment-config/environment-config.module';
+import { UserModule } from './user/user.module';
+import { MongooseModule } from '@nestjs/mongoose';
+import { EnvironmentConfigService } from 'src/infra/enviroment-config/environment-config.service';
+import { ConfigModule } from '@nestjs/config';
+import { AuthModule } from './auth/auth.module';
+import { SeedModule } from 'src/infra/seed/seed.module';
 
 @Module({
   imports: [
-    EnvironmentConfigModule
+    UserModule,
+    MongooseModule.forRootAsync({
+      imports: [EnvironmentConfigModule],
+      useFactory: (configService: EnvironmentConfigService) => ({
+        uri: configService.getMongoUrl(),
+      }),
+      inject: [EnvironmentConfigService],
+    }),
+    EnvironmentConfigModule,
+    ConfigModule,
+    AuthModule,
+    SeedModule
   ],
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule { }
