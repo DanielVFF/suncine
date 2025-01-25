@@ -1,4 +1,4 @@
-import { model, Schema, type Document } from "mongoose"
+import { Schema, type Document } from "mongoose"
 
 export interface UserData {
   id: string
@@ -35,5 +35,3 @@ export const userSchema: Schema = new Schema({
     required: true
   }
 })
-
-export const USER_MODEL = model<UserRawData>("User", userSchema)
