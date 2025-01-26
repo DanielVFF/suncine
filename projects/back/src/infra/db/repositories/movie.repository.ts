@@ -3,9 +3,10 @@ import { Injectable } from '@nestjs/common';
 import { Model } from 'mongoose';
 import { Movie } from '../models/movie.model';
 import { formatResult } from 'src/infra/utils/format-mongoose-result-fn';
+import { IMovieRepository } from 'src/interfaces/movie.interface';
 
 @Injectable()
-export class MovieRepository {
+export class MovieRepository implements IMovieRepository {
   constructor(
     @InjectModel(Movie.name) private readonly movieModel: Model<Movie>,
   ) {}
@@ -22,8 +23,8 @@ export class MovieRepository {
     return formatResult(await this.movieModel.find().lean().exec());
   }
 
-  async findById(id: string): Promise<Movie | null> {
-    return await this.movieModel.findById(id).exec();
+  async findById(id: Movie | string): Promise<Movie | null> {
+    return formatResult(await this.movieModel.findById(id).lean().exec());
   }
 
   async searchByTitle(title: string): Promise<Movie[]> {

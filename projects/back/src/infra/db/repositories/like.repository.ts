@@ -3,9 +3,11 @@ import { InjectModel } from '@nestjs/mongoose';
 import { DeleteResult, Model } from 'mongoose';
 import { Like } from '../models/like.model';
 import { formatResult } from 'src/infra/utils/format-mongoose-result-fn';
+import { MovieResult } from 'src/interfaces/movie.interface';
+import { ILikeRepository } from 'src/interfaces/like.interface';
 
 @Injectable()
-export class LikeRepository {
+export class LikeRepository implements ILikeRepository {
   constructor(@InjectModel(Like.name) private likeModel: Model<Like>) {}
 
   async create(userId: string, movieId: string): Promise<Like> {
@@ -31,7 +33,13 @@ export class LikeRepository {
     return await this.likeModel.countDocuments({ movie: movieId });
   }
 
-  async findTop10Movies(): Promise<any[]> {
+  async findByUserId(userId: string): Promise<Like[]> {
+    const likes = await this.likeModel.find({ user: userId }).select({_id: 1, movie: 1,}).lean().exec();
+    return formatResult(likes)
+  }
+  
+
+  async findTop10Movies(): Promise<MovieResult[]> {
     const topMovies = await this.likeModel.aggregate([
       {
         $group: {

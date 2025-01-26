@@ -20,3 +20,10 @@ export interface UserRawDataMongoose extends Document {
   salt: string;
   name: string;
 }
+
+export interface IUserRepository {
+  create(user: Partial<UserRawDataMongoose>): Promise<UserRawDataMongoose>;
+  findOneByLogin(login: string): Promise<UserRawDataMongoose | null>;
+  findAll(): Promise<UserRawDataMongoose[]>;
+  findById(id: string): Promise<UserRawDataMongoose | null>;
+}
