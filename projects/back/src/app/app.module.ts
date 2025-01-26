@@ -14,15 +14,15 @@ import { MovieModule } from './movie/movie.module';
 @Module({
   imports: [
     UserModule,
+    ConfigModule.forRoot({ isGlobal: true }),
+    EnvironmentConfigModule,
     MongooseModule.forRootAsync({
-      imports: [EnvironmentConfigModule],
+      imports: [EnvironmentConfigModule, ConfigModule],
       useFactory: (configService: EnvironmentConfigService) => ({
         uri: configService.getMongoUrl(),
       }),
       inject: [EnvironmentConfigService],
     }),
-    EnvironmentConfigModule,
-    ConfigModule,
     AuthModule,
     SeedModule,
     TmdbModule,
