@@ -107,6 +107,8 @@ paths:
       description: Retrieves detailed information about the most-trended movie, including metadata, user interaction, and media assets.
       tags:
         - Movies
+      security:
+        - bearerAuth: []
       responses:
         200:
           description: Successful response
