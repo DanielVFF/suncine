@@ -1,17 +1,16 @@
 import { InjectModel } from '@nestjs/mongoose';
 import { Injectable } from '@nestjs/common';
 import { Model } from 'mongoose';
-import { UserRawDataMongoose } from 'src/interfaces/user/user.interface';
+import { IUserRepository, UserRawDataMongoose } from 'src/interfaces/user.interface';
 
 @Injectable()
-export class UserRepository {
+export class UserRepository implements IUserRepository {
   constructor(
     @InjectModel('User') private readonly userModel: Model<UserRawDataMongoose>,
   ) {}
 
   async create(user: Partial<UserRawDataMongoose>): Promise<UserRawDataMongoose> {
-    const newUser = new this.userModel(user);
-    return await newUser.save();
+    return await new this.userModel(user).save();
   }
 
   async findOneByLogin(login : string){
@@ -19,7 +18,6 @@ export class UserRepository {
       login
     })
   }
-
 
   async findAll(): Promise<UserRawDataMongoose[]> {
     return await this.userModel.find().exec();

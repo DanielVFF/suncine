@@ -4,9 +4,12 @@ import swagger from "@fastify/swagger"
 import swaggerUi from "@fastify/swagger-ui"
 import { AppModule } from './app/app.module';
 import * as path from 'path';
+import { HttpExceptionFilter } from './infra/filters/http-exception.filter';
+import { CustomValidationPipe } from './infra/pipes/custom-validation.pipe';
+
 
 async function bootstrap() {
-  const app = await NestFactory.create<NestFastifyApplication>(
+  app = await NestFactory.create<NestFastifyApplication>(
     AppModule,
     new FastifyAdapter({ logger: true })
   );
@@ -33,8 +36,13 @@ async function bootstrap() {
     },
   });
 
+  // Configure Global pipes for dto validation
+  app.useGlobalPipes(new CustomValidationPipe())
+
+  //Configure Global filters for http exceptions standarts
+  app.useGlobalFilters(new HttpExceptionFilter());
+
   try {
-    // Start the application
     const port = 3000;
     await app.listen(port, '0.0.0.0');
   } catch (error) {
@@ -44,3 +52,4 @@ async function bootstrap() {
 }
 
 bootstrap();
+export let app;
