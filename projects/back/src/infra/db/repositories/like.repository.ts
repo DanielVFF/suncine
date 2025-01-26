@@ -39,7 +39,7 @@ export class LikeRepository implements ILikeRepository {
   }
   
 
-  async findTop10Movies(): Promise<MovieResult[]> {
+  async findTrendedMovies(limit : number): Promise<MovieResult[]> {
     const topMovies = await this.likeModel.aggregate([
       {
         $group: {
@@ -51,7 +51,7 @@ export class LikeRepository implements ILikeRepository {
         $sort: { likes: -1 },
       },
       {
-        $limit: 10,
+        $limit: limit,
       },
       {
         $lookup: {

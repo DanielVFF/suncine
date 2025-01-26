@@ -13,7 +13,7 @@ export class MovieService {
     ) { }
 
     async mostTrended(userId: string) {
-        const movies: MovieResult[] = await this.movieRepository.findAll()
+        const movies: MovieResult[] = await this.likeRepository.findTrendedMovies(1)
         for (const movie of movies) {
             movie.likes = await this.likeRepository.countLikesByMovieId(movie.id)
             movie.user_liked = !!(await this.likeRepository.findByMovieAndUserId(userId, movie.id))
@@ -22,8 +22,9 @@ export class MovieService {
     }
 
     async top10Movies(userId: string) {
-        const movies: MovieResult[] = await this.likeRepository.findTop10Movies()
+        const movies: MovieResult[] = await this.likeRepository.findTrendedMovies(10)
         for (const movie of movies) {
+            movie.likes = await this.likeRepository.countLikesByMovieId(movie.id)
             movie.user_liked = !!(await this.likeRepository.findByMovieAndUserId(userId, movie.id))
         }
         return movies

@@ -9,5 +9,5 @@ export interface ILikeRepository {
   deleteByMovieAndUserId(userId: string, movieId: string): Promise<DeleteResult>;
   countLikesByMovieId(movieId: string): Promise<number>;
   findByUserId(userId: string): Promise<Like[]>;
-  findTop10Movies(): Promise<MovieResult[]>;
+  findTrendedMovies(limit : number): Promise<MovieResult[]>;
 }
