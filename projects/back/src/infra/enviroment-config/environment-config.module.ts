@@ -1,11 +1,10 @@
 import { Global, Module } from '@nestjs/common';
 import { EnvironmentConfigService } from './environment-config.service';
-import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ConfigService } from '@nestjs/config';
 
-//Definido como global para conseguir puxar variáveis dentro da inicialização de um módulo
+// Should be defined as global in order to use inside modules
 @Global()
 @Module({
-  imports: [ConfigModule.forRoot()],
   providers: [EnvironmentConfigService, ConfigService],
   exports: [EnvironmentConfigService],
 })
