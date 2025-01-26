@@ -1,16 +1,17 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '../../infra/jwt/jwt.service';
-import { ENV_VAR } from '../../../env';
 import { SecretService } from 'src/infra/secrets/secrets.service';
 import { UserRepository } from 'src/infra/db/repositories/user.repository';
 import { UserData } from 'src/infra/db/models/user.model';
+import { EnvironmentConfigService } from 'src/infra/enviroment-config/environment-config.service';
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly jwtService: JwtService,
     private readonly argon2Service: SecretService,
-    private readonly repo: UserRepository
+    private readonly repo: UserRepository,
+    private readonly environmentConfigService: EnvironmentConfigService
   ) {}
 
   async fetchByLogin(login: string) {
@@ -44,7 +45,7 @@ export class AuthService {
 
     const isNotValid = !(await this.argon2Service.validate(
       user.salt,
-      ENV_VAR.PEPPER,
+      this.environmentConfigService.getPepper(),
       user.password,
       password,
     ));
@@ -53,7 +54,7 @@ export class AuthService {
     }
 
     const { password: _p, salt: _s, ...userData } = user;
-    const token = this.jwtService.sign(userData, ENV_VAR.JWT_TOKEN, { expires_in: 3000 });
+    const token = this.jwtService.sign(userData, this.environmentConfigService.getJwtToken(), { expires_in: 3000 });
 
     return {
       status: 'OK',

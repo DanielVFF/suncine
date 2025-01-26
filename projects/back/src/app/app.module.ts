@@ -8,6 +8,8 @@ import { EnvironmentConfigService } from 'src/infra/enviroment-config/environmen
 import { ConfigModule } from '@nestjs/config';
 import { AuthModule } from './auth/auth.module';
 import { SeedModule } from 'src/infra/seed/seed.module';
+import { TmdbModule } from './tmdb/tmdb.module';
+import { MovieModule } from './movie/movie.module';
 
 @Module({
   imports: [
@@ -22,7 +24,9 @@ import { SeedModule } from 'src/infra/seed/seed.module';
     EnvironmentConfigModule,
     ConfigModule,
     AuthModule,
-    SeedModule
+    SeedModule,
+    TmdbModule,
+    MovieModule
   ],
   controllers: [AppController],
   providers: [AppService],
