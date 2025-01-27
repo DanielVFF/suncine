@@ -15,7 +15,10 @@
 
 [🔙 Volta para documentação principal](../../README.md)
 
-Este é o backend do desafio SunCine, desenvolvido com [NestJS](https://nestjs.com/), utilizando [MongoDB](https://www.mongodb.com/) com [Mongoose](https://mongoosejs.com/), e testado com [Vitest](https://vitest.dev/).
+Este é o backend do desafio SunCine, desenvolvido com [NestJS](https://nestjs.com/) com [Fastify](https://fastify.dev), utilizando [MongoDB](https://www.mongodb.com/) com [Mongoose](https://mongoosejs.com/), e testado com [Vitest](https://vitest.dev/).
+
+> **Nota:** Para facilitar leitura, organizar as pastas, aproveitar validações e acima de tudo, padronizar eu escolhi migrar o paradigma do projeto e utilizar o framework NestJS. 
+
 
 ---
 
