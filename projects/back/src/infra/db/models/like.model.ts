@@ -6,13 +6,17 @@ import { Movie } from './movie.model';
 @Schema({ timestamps: true })
 export class Like extends Document {
   @Prop({ type: MongooseSchema.Types.ObjectId, ref: User.name, required: true })
-  user: User;  
+  user: User;
 
-  @Prop({ type: MongooseSchema.Types.ObjectId, ref: Movie.name, required: true })
-  movie: Movie; 
+  @Prop({
+    type: MongooseSchema.Types.ObjectId,
+    ref: Movie.name,
+    required: true,
+  })
+  movie: Movie;
 
   @Prop({ type: Date, default: Date.now })
-  likedAt: Date;  
+  likedAt: Date;
 }
 
 export const likeSchema = SchemaFactory.createForClass(Like);
