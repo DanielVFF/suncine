@@ -36,7 +36,7 @@ Antes de executar o projeto, certifique-se de ter as seguintes ferramentas insta
 ### 1. Clonando o repositório
 ```bash
 # Clone o repositório
-$ git clone <URL_DO_REPOSITORIO>
+$ git clone git@github.com:DanielVFF/suncine.git
 
 # Navegue para o diretório do backend
 $ cd projects/back
@@ -107,7 +107,7 @@ $ pnpm run test
 A documentação da API está disponível e foi gerada automaticamente com Swagger. Para acessá-la, basta abrir o navegador e visitar:
 
 ```url
-http://localhost:3000/api
+http://localhost:3000/docs
 ```
 
 ---
