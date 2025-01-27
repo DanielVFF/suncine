@@ -12,7 +12,7 @@ export class MovieRepository implements IMovieRepository {
   ) {}
 
   async create(movie: Partial<Movie>): Promise<Movie> {
-    return await (new this.movieModel(movie)).save();
+    return await new this.movieModel(movie).save();
   }
 
   async findOneByTmdbId(tmdb_id: number): Promise<Movie | null> {
@@ -28,8 +28,10 @@ export class MovieRepository implements IMovieRepository {
   }
 
   async searchByTitle(title: string): Promise<Movie[]> {
-    return await this.movieModel.find({
-      title: { $regex: title, $options: 'i' },
-    }).exec();
+    return await this.movieModel
+      .find({
+        title: { $regex: title, $options: 'i' },
+      })
+      .exec();
   }
 }

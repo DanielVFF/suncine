@@ -8,11 +8,9 @@ import { UserRepository } from 'src/infra/db/repositories/user.repository';
 import { AuthController } from './auth.controller';
 
 @Module({
-  imports: [
-    MongooseModule.forFeature([{ name: 'User', schema: userSchema }])
-  ],
+  imports: [MongooseModule.forFeature([{ name: 'User', schema: userSchema }])],
   providers: [AuthService, JwtService, SecretService, UserRepository],
   controllers: [AuthController],
-  exports: [AuthService]
+  exports: [AuthService],
 })
-export class AuthModule { }
+export class AuthModule {}

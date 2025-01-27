@@ -12,11 +12,20 @@ import { MovieRepository } from '../db/repositories/movie.repository';
 import { Movie, movieSchema } from '../db/models/movie.model';
 
 @Module({
-      imports: [
-            MongooseModule.forFeature([{ name: Movie.name, schema: movieSchema }]),
-            MongooseModule.forFeature([{ name: User.name, schema: userSchema }])
-      ],
-      providers: [AuthService, SecretService, JwtService, SeedService , UserRepository, TmdbService, HttpService, MovieRepository],
-      exports: []
+  imports: [
+    MongooseModule.forFeature([{ name: Movie.name, schema: movieSchema }]),
+    MongooseModule.forFeature([{ name: User.name, schema: userSchema }]),
+  ],
+  providers: [
+    AuthService,
+    SecretService,
+    JwtService,
+    SeedService,
+    UserRepository,
+    TmdbService,
+    HttpService,
+    MovieRepository,
+  ],
+  exports: [],
 })
-export class SeedModule { }
+export class SeedModule {}

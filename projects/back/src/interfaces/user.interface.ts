@@ -1,9 +1,9 @@
 import { Document } from 'mongoose';
 
 export interface User {
-  id: string
-  login: string
-  name: string
+  id: string;
+  login: string;
+  name: string;
 }
 
 export interface UserDataMongoose {

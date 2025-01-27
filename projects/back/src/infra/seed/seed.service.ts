@@ -13,41 +13,42 @@ export class SeedService implements OnApplicationBootstrap {
     private readonly secretService: SecretService,
     private readonly environmentService: EnvironmentConfigService,
     private readonly tmdbService: TmdbService,
-    private readonly movieRepository: MovieRepository
-  ) { }
+    private readonly movieRepository: MovieRepository,
+  ) {}
 
   async onApplicationBootstrap() {
     await this.seed();
   }
 
   private async seed() {
-    await this.firstUserSeed()
-    await this.seedTrendingMovies('week')
+    await this.firstUserSeed();
+    await this.seedTrendingMovies('week');
   }
 
   private async firstUserSeed() {
     const { hash, salt } = await this.secretService.encrypt(
       this.environmentService.getPepper(),
-      this.environmentService.getUserPass()
-    )
-    const user_raw: Omit<UserData, "id"> = {
+      this.environmentService.getUserPass(),
+    );
+    const user_raw: Omit<UserData, 'id'> = {
       login: this.environmentService.getUserLogin(),
       password: hash,
       salt: salt,
-      name: "Dev"
-    }
-    this.authService.fetchByLoginOrCreate(user_raw)
-    console.info(`firstUserSeed executed`)
+      name: 'Dev',
+    };
+    this.authService.fetchByLoginOrCreate(user_raw);
+    console.info(`firstUserSeed executed`);
   }
 
   private async seedTrendingMovies(timeWindow: 'day' | 'week'): Promise<void> {
-
-    const response = await this.tmdbService.getPopularMovies(timeWindow)
+    const response = await this.tmdbService.getPopularMovies(timeWindow);
 
     const movies = response.results;
 
     for (const movie of movies) {
-      const existingMovie = await this.movieRepository.findOneByTmdbId(movie.id);
+      const existingMovie = await this.movieRepository.findOneByTmdbId(
+        movie.id,
+      );
 
       if (existingMovie) {
         continue;
@@ -58,10 +59,12 @@ export class SeedService implements OnApplicationBootstrap {
         original_title: movie.original_title,
         backdrop_path: movie.backdrop_path,
         poster_path: movie.poster_path,
-        release_date: movie.release_date ? new Date(movie.release_date) : undefined,
+        release_date: movie.release_date
+          ? new Date(movie.release_date)
+          : undefined,
         overview: movie.overview,
       });
     }
-    console.info(`seedTrendingMovies executed`)
+    console.info(`seedTrendingMovies executed`);
   }
 }

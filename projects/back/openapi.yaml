@@ -230,6 +230,63 @@ paths:
         500:
           $ref: '#/components/responses/InternalServerError'
 
+  /user:
+    post:
+      summary: Create a new user
+      description: Register a new user in the system.
+      tags:
+        - User
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: The full name of the user.
+                  example: John Doe
+                login:
+                  type: string
+                  format: email
+                  description: The email address to be used as login.
+                  example: john.doe@example.com
+                password:
+                  type: string
+                  format: password
+                  description: The password for the user account.
+                  example: Passw0rd!
+      responses:
+        201:
+          description: User successfully created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: CREATED
+                    description: Status of the request.
+                  payload:
+                    $ref: '#/components/schemas/User'
+        400:
+          description: Bad request due to validation errors
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: BAD_REQUEST
+                  message:
+                    type: string
+                    example: Validation error occurred.
+        500:
+          $ref: '#/components/responses/InternalServerError'
+
 ### COMPONENTS ####
 components:
   securitySchemes:
