@@ -3,21 +3,21 @@ import supertest from 'supertest';
 
 let authToken: string;
 let trendingMovieId: number;
-const api = supertest('http://localhost:3000');  
+const api = supertest('http://localhost:3000');
 beforeAll(async () => {
   const loginResponse = await api
     .post('/login')
     .send({ login: 'admin@email.com', password: 'Admin@123' })
     .expect(200);
 
-  authToken = loginResponse.body.payload.token; 
+  authToken = loginResponse.body.payload.token;
 
   const trendingResponse = await api
     .get('/movie/most-trended')
     .set('Authorization', `Bearer ${authToken}`)
     .expect(200);
 
-  trendingMovieId = trendingResponse.body[0].id; 
+  trendingMovieId = trendingResponse.body[0].id;
 });
 
 describe('Authentication Endpoints', () => {
@@ -63,7 +63,7 @@ describe('Movie Endpoints', () => {
   });
 
   it('should allow the user to like or unlike a movie', async () => {
-    console.log(trendingMovieId)
+    console.log(trendingMovieId);
     const likeResponse = await api
       .put(`/movie/like/${trendingMovieId}`)
       .set('Authorization', `Bearer ${authToken}`)
@@ -85,7 +85,7 @@ describe('Movie Endpoints', () => {
       .set('Authorization', `Bearer ${authToken}`)
       .expect(200);
 
-    expect(Array.isArray(response.body)).toBe(true); 
+    expect(Array.isArray(response.body)).toBe(true);
   });
 });
 

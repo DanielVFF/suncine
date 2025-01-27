@@ -11,9 +11,9 @@ import { Like, likeSchema } from 'src/infra/db/models/like.model';
 @Module({
   imports: [
     MongooseModule.forFeature([{ name: Movie.name, schema: movieSchema }]),
-    MongooseModule.forFeature([{ name: Like.name, schema: likeSchema }])
+    MongooseModule.forFeature([{ name: Like.name, schema: likeSchema }]),
   ],
   controllers: [MovieController],
-  providers: [MovieService, MovieRepository, JwtService, LikeRepository]
+  providers: [MovieService, MovieRepository, JwtService, LikeRepository],
 })
 export class MovieModule {}

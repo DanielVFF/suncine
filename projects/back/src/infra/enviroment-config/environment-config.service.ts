@@ -3,11 +3,10 @@ import { ConfigService } from '@nestjs/config';
 import { IEnvironmentConfigService } from 'src/interfaces/config/environment-config.interface';
 
 @Injectable()
-export class EnvironmentConfigService implements IEnvironmentConfigService
-{
+export class EnvironmentConfigService implements IEnvironmentConfigService {
   constructor(private configService: ConfigService) {}
 
-  getTemplate(variableName : string): string{
+  getTemplate(variableName: string): string {
     const dbHost = this.configService.get<string>(variableName);
     if (!dbHost) {
       throw new Error(`${variableName} não está definido no .env`);
@@ -16,25 +15,25 @@ export class EnvironmentConfigService implements IEnvironmentConfigService
   }
 
   getMongoUrl(): string {
-    return this.getTemplate('MONGO_URL')
+    return this.getTemplate('MONGO_URL');
   }
 
   getPepper(): string {
-    return this.getTemplate('PEPPER')
+    return this.getTemplate('PEPPER');
   }
 
   getUserLogin(): string {
-    return this.getTemplate('DEFAULT_USER_LOGIN')
+    return this.getTemplate('DEFAULT_USER_LOGIN');
   }
   getUserPass(): string {
-    return this.getTemplate('DEFAULT_USER_PASS')
+    return this.getTemplate('DEFAULT_USER_PASS');
   }
 
   getTmdbApiKey(): string {
-    return this.getTemplate('TMDB_API_KEY')
+    return this.getTemplate('TMDB_API_KEY');
   }
 
   getJwtToken(): string {
-    return this.getTemplate('JWT_TOKEN')
+    return this.getTemplate('JWT_TOKEN');
   }
 }

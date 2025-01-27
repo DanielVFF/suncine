@@ -1,6 +1,6 @@
 export function formatResult(result) {
   if (Array.isArray(result)) {
-    return result.map(doc => {
+    return result.map((doc) => {
       const { _id, __v, ...rest } = doc;
       return { id: _id, ...rest };
     });
@@ -8,5 +8,5 @@ export function formatResult(result) {
     const { _id, __v, ...rest } = result;
     return { id: _id, ...rest };
   }
-  return result; 
+  return result;
 }

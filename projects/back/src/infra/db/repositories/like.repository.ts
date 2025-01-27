@@ -18,14 +18,20 @@ export class LikeRepository implements ILikeRepository {
 
     return await newLike.save();
   }
-  async findByMovieAndUserId(userId: string, movieId: string): Promise<Like | null> {
+  async findByMovieAndUserId(
+    userId: string,
+    movieId: string,
+  ): Promise<Like | null> {
     return await this.likeModel.findOne({ user: userId, movie: movieId });
   }
 
   async findAll(): Promise<Like[]> {
     return await this.likeModel.find().exec();
   }
-  async deleteByMovieAndUserId(userId: string, movieId: string): Promise<DeleteResult> {
+  async deleteByMovieAndUserId(
+    userId: string,
+    movieId: string,
+  ): Promise<DeleteResult> {
     return await this.likeModel.deleteOne({ user: userId, movie: movieId });
   }
 
@@ -34,12 +40,15 @@ export class LikeRepository implements ILikeRepository {
   }
 
   async findByUserId(userId: string): Promise<Like[]> {
-    const likes = await this.likeModel.find({ user: userId }).select({_id: 1, movie: 1,}).lean().exec();
-    return formatResult(likes)
+    const likes = await this.likeModel
+      .find({ user: userId })
+      .select({ _id: 1, movie: 1 })
+      .lean()
+      .exec();
+    return formatResult(likes);
   }
-  
 
-  async findTrendedMovies(limit : number): Promise<MovieResult[]> {
+  async findTrendedMovies(limit: number): Promise<MovieResult[]> {
     const topMovies = await this.likeModel.aggregate([
       {
         $group: {
@@ -57,8 +66,8 @@ export class LikeRepository implements ILikeRepository {
         $lookup: {
           from: 'movies',
           localField: '_id',
-          foreignField: '_id', 
-          as: 'movieDetails', 
+          foreignField: '_id',
+          as: 'movieDetails',
         },
       },
       {
@@ -66,22 +75,20 @@ export class LikeRepository implements ILikeRepository {
       },
       {
         $project: {
-          _id: 0, 
-          id: '$_id',  
-          tmdb_id: '$movieDetails.tmdb_id',  
-          title: '$movieDetails.title',  
-          original_title: '$movieDetails.original_title',  
-          backdrop_path: '$movieDetails.backdrop_path',  
-          poster_path: '$movieDetails.poster_path',  
-          release_date: '$movieDetails.release_date',  
-          overview: '$movieDetails.overview',  
+          _id: 0,
+          id: '$_id',
+          tmdb_id: '$movieDetails.tmdb_id',
+          title: '$movieDetails.title',
+          original_title: '$movieDetails.original_title',
+          backdrop_path: '$movieDetails.backdrop_path',
+          poster_path: '$movieDetails.poster_path',
+          release_date: '$movieDetails.release_date',
+          overview: '$movieDetails.overview',
           likes: 1,
         },
       },
     ]);
-    
+
     return formatResult(topMovies);
   }
-  
-
 }

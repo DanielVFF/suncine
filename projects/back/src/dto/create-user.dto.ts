@@ -15,6 +15,5 @@ export class CreateUserDto {
   @MaxLength(50, { message: 'The name can be at most 50 characters long.' })
   name: string;
 
-
-  salt?: string
+  salt?: string;
 }

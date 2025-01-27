@@ -11,7 +11,12 @@ export class SecretService {
     return { hash: HASH, salt: SALT };
   }
 
-  async validate(SALT: string, PEPPER: string, HASH: string, data: string): Promise<boolean> {
+  async validate(
+    SALT: string,
+    PEPPER: string,
+    HASH: string,
+    data: string,
+  ): Promise<boolean> {
     const SEASONED = data + SALT + PEPPER;
     return await argon2.verify(HASH, SEASONED);
   }

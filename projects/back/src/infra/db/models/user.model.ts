@@ -9,7 +9,7 @@ export interface UserData {
   name: string;
 }
 
-@Schema({ timestamps: true }) 
+@Schema({ timestamps: true })
 export class User extends Document {
   @Prop({ type: String, required: true, unique: true, index: true })
   login: string;

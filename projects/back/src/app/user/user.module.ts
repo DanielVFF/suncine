@@ -9,10 +9,10 @@ import { SecretService } from 'src/infra/secrets/secrets.service';
 
 @Module({
   imports: [
-    MongooseModule.forFeature([{ name: User.name, schema: userSchema }])
+    MongooseModule.forFeature([{ name: User.name, schema: userSchema }]),
   ],
   providers: [UserService, UserRepository, JwtService, SecretService],
   controllers: [UserController],
-  exports: [UserService]
+  exports: [UserService],
 })
-export class UserModule { }
+export class UserModule {}

@@ -26,9 +26,9 @@ import { MovieModule } from './movie/movie.module';
     AuthModule,
     SeedModule,
     TmdbModule,
-    MovieModule
+    MovieModule,
   ],
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule { }
+export class AppModule {}
