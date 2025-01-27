@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import * as argon2 from '@node-rs/argon2';
-import { nanoid } from 'nanoid'; // Nanoid agora pode ser importado diretamente.
+import { nanoid } from 'nanoid';
 
 @Injectable()
 export class SecretService {
