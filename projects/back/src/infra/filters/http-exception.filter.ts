@@ -13,7 +13,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
     const response = ctx.getResponse<FastifyReply>();
     const status = exception.getStatus();
 
-    const exceptionResponse = exception.getResponse();
+    const exceptionResponse: any = exception.getResponse();
     const message = exceptionResponse
 
     const statusMap = {
@@ -28,6 +28,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
     }
 
     if(message && typeof message == 'string') responseFormated.message = message
+    else if(message.message) responseFormated.message = message.message
 
     response.status(status).send(responseFormated);
   }
