@@ -10,6 +10,7 @@ import { AuthModule } from './auth/auth.module';
 import { SeedModule } from 'src/infra/seed/seed.module';
 import { TmdbModule } from './tmdb/tmdb.module';
 import { MovieModule } from './movie/movie.module';
+import { LoggerModule } from 'src/infra/logger/logger.module';
 
 @Module({
   imports: [
@@ -26,7 +27,8 @@ import { MovieModule } from './movie/movie.module';
     AuthModule,
     SeedModule,
     TmdbModule,
-    MovieModule
+    MovieModule,
+    LoggerModule
   ],
   controllers: [AppController],
   providers: [AppService],
