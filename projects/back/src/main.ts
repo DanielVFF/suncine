@@ -9,6 +9,8 @@ import { AppModule } from './app/app.module';
 import * as path from 'path';
 import { HttpExceptionFilter } from './infra/filters/http-exception.filter';
 import { CustomValidationPipe } from './infra/pipes/custom-validation.pipe';
+import { LoggerService } from './infra/logger/logger.service';
+import { AllExceptionsFilter } from './infra/filters/all-exception.filter';
 
 async function bootstrap() {
   app = await NestFactory.create<NestFastifyApplication>(
@@ -41,6 +43,11 @@ async function bootstrap() {
   // Configure Global pipes for dto validation
   app.useGlobalPipes(new CustomValidationPipe());
 
+  //Configure custom logger service
+  const logger = app.get(LoggerService);
+  app.useGlobalFilters(new AllExceptionsFilter(logger));
+
+  app.useLogger(logger)
   //Configure Global filters for http exceptions standarts
   app.useGlobalFilters(new HttpExceptionFilter());
 
